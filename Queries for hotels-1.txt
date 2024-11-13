@@ -1,0 +1,29 @@
+#1 data of customers,hotels and reservation of months after september:
+
+select Reservation_date,upper(Hotel_name) "Hotel Name",Fullname,payment.Card_type from Hotel,Reservation,Customer,payment where Reservation.Membership_id=Customer.Membership_id and Reservation.hotel_id=hotel.hotel_id and Reservation.Payment_id=Payment.Payment_id and to_char(Reservation_date,'MM')>=9 order by(reservation_date) 
+
+////////////////////////////////////////////////////////////////
+#2 number of clients every month this year:
+
+select to_char(reservation_date,'mm') "Month",count(membership_id) "Customer Count" from reservation natural join customer where to_char(reservation_date,'yyyy')=2020 group by to_char(reservation_date,'mm') order by (to_char(reservation_date,'mm'))
+ 
+
+////////////////////////////////////////////////////////////////
+#3 customers with and without resrvations with resravation data:
+
+select substr(Fullname,Instr(fullname, ' '),20) "Last Name",hotel_id,arrival_date,reservation_id,e_mail,num_of_nights from customer left outer join reservation on customer.membership_id=reservation.membership_id order by(substr(Fullname,Instr(fullname, ' '),20)
+
+////////////////////////////////////////////////////////////////
+#4 hotels address code statrs with 89:
+
+select hotel_name,address.address_id,country,city from hotel inner join Address on hotel.Address_id=Address.Address_id where Address.Address_id like '89%'
+
+////////////////////////////////////////////////////////////////
+#5 sum of profits for every hotel with reservations:
+
+select sum(room_type.one_night_price*reservation.num_of_nights),hotel_name from reservation,room_type,hotel where reservation.room_id=room_type.room_id and hotel.hotel_id=room_type.hotel_id group by hotel_name
+
+////////////////////////////////////////////////////////////////
+#update for payment card is expired cancel payment (check payment not done)
+
+update reservation set check_reservation='N'where payment_id=(select payment_id from payment where expire_date>=sysdate) 

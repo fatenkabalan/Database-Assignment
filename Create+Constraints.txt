@@ -1,0 +1,64 @@
+create table Hotel (
+Hotel_id number(8),
+Hotel_name varchar(30) not null,
+Phone number(10) not null,
+Room_num number(3),
+Address_id number(8),
+constraint hotel_pk primary key (Hotel_id),
+constraint hote_address foreign key (Address_id) references Address (Address_id)
+);
+create table Address(
+Address_id number(8),
+Country varchar(30) not null,
+City varchar(30),
+Neighbourhood varchar(30),
+Street varchar(30),
+Mailbox varchar(30),
+Mail_IP number(8),
+constraint address_pk primary key (Address_id)
+);
+create table Reservation(
+Reservation_id number(8),
+Hotel_Id number(8),
+Reservation_date date,
+Arrival_date date,
+Num_of_Nights number(3),
+Payment_id number(8),
+Membership_id number(8),
+Check_Reservation varchar(1) default 'Y',
+Room_ID number(4),
+constraint reservation_pk primary key (Reservation_id),
+constraint customer_reservation foreign key(Membership_id) references Customer(Membership_id),
+constraint payment_reservation foreign key(Payment_id) references Payment(Payment_id),
+constraint room_reservation foreign key(Room_ID) references Room_Type (Room_ID),
+constraint hotel_reservation foreign key (Hotel_id) references Hotel (Hotel_id)
+);
+
+create table Customer(
+Membership_id number(8),
+Fullname varchar(30),
+Age number(2) check(Age>18),
+Address varchar(30),
+Phone number(10),
+E_mail varchar(30),
+constraint customer_pk primary key (Membership_id)
+);
+create table Payment(
+Payment_id number(8),
+Expire_date date,
+CVV number(4) not null,
+Card_type varchar(10),
+constraint payment_pk primary key(Payment_id)
+);
+
+create table Room_Type(
+Room_ID number(4),
+Type varchar(30),
+Hotel_ID number(8),
+One_Night_Price number(4),
+constraint Room_Pk primary key (Room_ID),
+constraint Hotel_Room foreign key (Hotel_ID) references hotel(hotel_id)
+);
+
+
+Alter table Address add constraint IP_Unique unique(Mail_ip);
